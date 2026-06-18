@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMKES</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>SIMKES</h2>
+        <a href="index.html">Dashboard</a>
+        <a href="pendaftaran.html">Pendaftaran</a>
+        <a class="active" href="poli.html">Pemeriksaan Poli</a>
+        <a href="farmasi.html">Farmasi</a>
+        <a href="radiologi.html">Radiologi</a>
+        <a href="laboratorium.html">Laboratorium</a>
+        <a href="kasir.html">Kasir</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+    <div class="main">
+
+        <div class="card">
+            <h2>Pemeriksaan Poli</h2>
+
+            <input type="text" id="namaPasien" placeholder="Nama Pasien">
+            <input type="text" id="diagnosa" placeholder="Diagnosa">
+            <input type="text" id="tindakan" placeholder="Tindakan">
+
+            <button id="submit" onclick="submitPemeriksaan()">Simpan</button>
+
+        </div>
+
+        <div class="card">
+            <h2>Antrian Poli</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Diagnosa</th>
+                        <th>Tindakan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablePoli"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let pemeriksaan = []
+        let indexUpdate = -1
+       
+        function submitPemeriksaan() {
+            let namaPasien = document.getElementById("namaPasien").value.trim()
+            let diagnosa = document.getElementById("diagnosa").value
+            let tindakan = document.getElementById("tindakan").value
+            if (namaPasien) {
+                if (indexUpdate !== -1) {
+                    pemeriksaan[indexUpdate] = {
+                        namaPasien,
+                        diagnosa,
+                        tindakan
+                    }
+                    document.getElementById('submit').innerText = 'Simpan'
+                    indexUpdate = -1
+                    alert('Data Berhasil diupdate')
+                }else{
+                    pemeriksaan.push({
+                        namaPasien,
+                        diagnosa,
+                        tindakan
+                    })
+                    alert('Data Berhasil disimpan')
+                }
+                renderTable()
+                document.getElementById('namaPasien').value = ''
+                document.getElementById('diagnosa').value = ''
+                document.getElementById('tindakan').value = ''
+            }else{
+                alert('Semua Data Wajib diisi')
+            }
+        }
+        function renderTable() {
+            let html = ''
+            pemeriksaan.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.namaPasien}</td>
+                        <td>${item.diagnosa}</td>
+                        <td>${item.tindakan}</td>
+                        <td><span class="badge wait">Menunggu</span></td>
+                        <td>
+                            <button onclick="updateRegister(${index})">Update</button>
+                            <button onclick="deleteRegister(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `
+            })
+
+            document.getElementById("tablePoli").innerHTML = html;
+        }
+        function deleteRegister(index) {
+            let konfirmasi = 
+            confirm(`Yakin ingin hapus pasien ${pemeriksaan[index].namaPasien}?`)
+            if (konfirmasi) {
+                pemeriksaan.splice(index, 1)
+                renderTable()
+                alert('Pasien Berhasil dihapus')
+            }
+        }
+
+        function updateRegister(index) {
+            document.getElementById('submit').innerText = 'Update'
+            document.getElementById('namaPasien').value = pemeriksaan[index].namaPasien
+            document.getElementById('diagnosa').value =  pemeriksaan[index].diagnosa
+            document.getElementById('tindakan').value =  pemeriksaan[index].tindakan
+            indexUpdate = index
+        }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMKES</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>SIMKES</h2>
+        <a href="index.html">Dashboard</a>
+        <a href="pendaftaran.html">Pendaftaran</a>
+        <a href="poli.html">Pemeriksaan Poli</a>
+        <a href="farmasi.html">Farmasi</a>
+        <a class="active" href="radiologi.html">Radiologi</a>
+        <a href="laboratorium.html">Laboratorium</a>
+        <a href="kasir.html">Kasir</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+    <div class="main">
+
+        <div class="card">
+            <h2>Radiologi</h2>
+
+            <input type="text" id="namaPasien" placeholder="Nama Pasien">
+
+            <select id="pemeriksaan">
+                <option value="">-- Pilih Pemeriksaan --</option>
+                <option>X-Ray</option>
+                <option>CT Scan</option>
+                <option>MRI</option>
+                <option>USG</option>
+            </select>
+
+            <input type="text" id="hasil" placeholder="Hasil Radiologi">
+
+            <button id="submit" onclick="submitRadiologi()">Simpan</button>
+
+        </div>
+
+        <div class="card">
+            <h2>Data Radiologi</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Pasien</th>
+                        <th>Pemeriksaan</th>
+                        <th>Hasil</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableRadiologi"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let radiologi = []
+        let indexUpdate = -1
+       
+        function submitRadiologi() {
+            let namaPasien = document.getElementById("namaPasien").value.trim()
+            let pemeriksaan = document.getElementById("pemeriksaan").value
+            let hasil = document.getElementById("hasil").value
+            if (namaPasien) {
+                if (indexUpdate !== -1) {
+                    radiologi[indexUpdate] = {
+                        namaPasien,
+                        pemeriksaan,
+                        hasil
+                    }
+                    document.getElementById('submit').innerText = 'Simpan'
+                    indexUpdate = -1
+                    alert('Data Berhasil diupdate')
+                }else{
+                    radiologi.push({
+                        namaPasien,
+                        pemeriksaan,
+                        hasil
+                    })
+                    alert('Data Berhasil disimpan')
+                }
+                renderTable();
+                document.getElementById("namaPasien").value = ''
+                document.getElementById("pemeriksaan").selectedIndex = 0
+                document.getElementById("hasil").value = ''
+            }else{
+                alert('Semua Data Wajib diisi')
+            }
+        }
+        function renderTable() {
+            let html = ''
+            radiologi.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.namaPasien}</td>
+                        <td>${item.pemeriksaan}</td>
+                        <td>${item.hasil}</td>
+                        <td>
+                            <button onclick="updateRegister(${index})">Update</button>
+                            <button onclick="deleteRegister(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `
+            })
+
+            document.getElementById("tableRadiologi").innerHTML = html
+        }
+        function deleteRegister(index) {
+            let konfirmasi = 
+            confirm(`Yakin ingin hapus pasien ${radiologi[index].namaPasien}?`)
+            if (konfirmasi) {
+                radiologi.splice(index, 1)
+                renderTable()
+                alert('Pasien Berhasil dihapus')
+            }
+        }
+        function updateRegister(index) {
+            document.getElementById('submit').innerText = 'Update'
+            document.getElementById('namaPasien').value = radiologi[index].namaPasien
+            document.getElementById('pemeriksaan').value =  radiologi[index].pemeriksaan
+            document.getElementById('hasil').value =  radiologi[index].hasil
+            indexUpdate = index
+        }
+
+
+    </script>
+
+</body>
+
+</html>

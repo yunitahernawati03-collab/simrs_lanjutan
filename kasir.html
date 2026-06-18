@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMKES</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>SIMKES</h2>
+        <a href="index.html">Dashboard</a>
+        <a href="pendaftaran.html">Pendaftaran</a>
+        <a href="poli.html">Pemeriksaan Poli</a>
+        <a href="farmasi.html">Farmasi</a>
+        <a href="radiologi.html">Radiologi</a>
+        <a href="laboratorium.html">Laboratorium</a>
+        <a class="active" href="kasir.html">Kasir</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+    <div class="main">
+
+        <div class="card">
+            <h2>Pembayaran</h2>
+
+            <input type="text" id="namaPasien" placeholder="Nama Pasien">
+            <input type="number" id="total" placeholder="Total Pembayaran">
+
+            <button id="submit" onclick="bayar()">Bayar</button>
+        </div>
+
+        <div class="card">
+            <h2>Riwayat Transaksi</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Pasien</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableTransaksi"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let transaksi = []
+        let indexUpdate = -1
+        function bayar() {
+            let namaPasien = document.getElementById("namaPasien").value.trim()
+            let total = document.getElementById("total").value
+            if (namaPasien) {
+                if (indexUpdate !== -1) {
+                    transaksi[indexUpdate] = {
+                        namaPasien,
+                        total
+                    }
+                    document.getElementById('submit').innerText = 'Simpan'
+                    indexUpdate = -1
+                    alert('Data Berhasil diupdate')
+                }else{
+                    transaksi.push({
+                        namaPasien,
+                        total
+                    })
+                    alert('Data Berhasil disimpan')
+                }
+                renderTable()
+                document.getElementById("namaPasien").value = ''
+                document.getElementById("total").value = ''
+            } else {
+                alert("Semua Data Harus diisi");
+            }
+        }
+        function renderTable() {
+            let html = ''
+            transaksi.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.namaPasien}</td>
+                        <td>Rp ${Number(item.total).toLocaleString('id-ID')}</td>
+                        <td><span class="badge wait">Lunas</span></td>
+                        <td>
+                            <button onclick="updateRegister(${index})">Update</button>
+                            <button onclick="deleteRegister(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `
+            })
+
+            document.getElementById("tableTransaksi").innerHTML = html
+        }
+        function deleteRegister(index) {
+            let konfirmasi = 
+            confirm(`Yakin ingin hapus pasien ${transaksi[index].namaPasien}?`)
+            if (konfirmasi) {
+                transaksi.splice(index, 1)
+                renderTable()
+                alert('Pasien Berhasil dihapus')
+            }
+        }
+        function updateRegister(index) {
+            document.getElementById('submit').innerText = 'Update'
+            document.getElementById('namaPasien').value = transaksi[index].namaPasien
+            document.getElementById('total').value =  transaksi[index].total
+            indexUpdate = index
+        }
+    </script>
+
+</body>
+
+</html>

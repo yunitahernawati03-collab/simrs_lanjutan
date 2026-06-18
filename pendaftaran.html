@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMKES</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>SIMKES</h2>
+        <a href="index.html">Dashboard</a>
+        <a class="active" href="pendaftaran.html">Pendaftaran</a>
+        <a href="poli.html">Pemeriksaan Poli</a>
+        <a href="farmasi.html">Farmasi</a>
+        <a href="radiologi.html">Radiologi</a>
+        <a href="laboratorium.html">Laboratorium</a>
+        <a href="kasir.html">Kasir</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+    <div class="main">
+
+        <div class="card">
+            <h2>Form Pendaftaran</h2>
+
+            <input type="text" id="namaPasien" placeholder="Nama Pasien">
+
+            <select id="poli">
+                <option value="">-- Pilih Poli --</option>
+                <option>Poli Umum</option>
+                <option>Poli Gigi</option>
+                <option>Poli Obgyn</option>
+            </select>
+
+            <br><br>
+
+            <button id="submit" onclick="submitRegister()">Simpan</button>
+        </div>
+
+        <div class="card">
+            <h2>List Pendaftaran</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Poli</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablePendaftaran"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let pasien = []
+        let indexUpdate = -1
+        function submitRegister() {
+            let namaPasien = document.getElementById('namaPasien').value.trim()
+            let poli = document.getElementById('poli').value
+            if (namaPasien) {
+                if (indexUpdate !== -1) {
+                    pasien[indexUpdate] = {
+                        namaPasien,
+                        poli
+                    }
+                    document.getElementById('submit').innerText = 'Simpan'
+                    indexUpdate = -1
+                    alert('Pasien Berhasil diupdate')
+                }else{
+                    pasien.push({
+                        namaPasien,
+                        poli
+                    })
+                    alert('Pasien Berhasil disimpan')
+                }
+                renderTable()
+                document.getElementById('namaPasien').value = ''
+                document.getElementById('poli').selectedIndex = 0
+            }else{
+                alert('Nama Pasien Wajib diisi')
+            }
+        }
+
+        function renderTable() {
+            let html = ''
+            pasien.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.namaPasien}</td>
+                        <td>${item.poli}</td>
+                        <td><span class="badge wait">Menunggu</span></td>
+                        <td>
+                            <button onclick="updateRegister(${index})">Update</button>
+                            <button onclick="deleteRegister(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `
+            })
+
+            document.getElementById('tablePendaftaran').innerHTML = html
+        }
+
+        function deleteRegister(index) {
+            let konfirmasi = 
+            confirm(`Yakin ingin hapus pasien ${pasien[index].namaPasien}?`)
+            if (konfirmasi) {
+                pasien.splice(index, 1)
+                renderTable()
+                alert('Pasien Berhasil dihapus')
+            }
+        }
+
+        function updateRegister(index) {
+            document.getElementById('submit').innerText = 'Update'
+            document.getElementById('namaPasien').value = pasien[index].namaPasien
+            document.getElementById('poli').value =  pasien[index].poli
+            indexUpdate = index
+        }
+
+    </script>
+
+</body>
+
+</html>
