@@ -63,7 +63,8 @@
     </div>
 
     <script>
-        let radiologi = []
+        let radiologi = localStorage.getItem('radiologi') ? JSON.parse(localStorage.
+        getItem ('radiologi')) :[]
         let indexUpdate = -1
        
         function submitRadiologi() {
@@ -77,6 +78,7 @@
                         pemeriksaan,
                         hasil
                     }
+                    localStorage.setItem('radiologi',JSON.stringify(radiologi))
                     document.getElementById('submit').innerText = 'Simpan'
                     indexUpdate = -1
                     alert('Data Berhasil diupdate')
@@ -86,6 +88,7 @@
                         pemeriksaan,
                         hasil
                     })
+                    localStorage.setItem('radiologi',JSON.stringify(radiologi))
                     alert('Data Berhasil disimpan')
                 }
                 renderTable();
@@ -120,6 +123,7 @@
             confirm(`Yakin ingin hapus pasien ${radiologi[index].namaPasien}?`)
             if (konfirmasi) {
                 radiologi.splice(index, 1)
+                localStorage.setItem('radiologi',JSON.stringify(radiologi))
                 renderTable()
                 alert('Pasien Berhasil dihapus')
             }
@@ -131,7 +135,7 @@
             document.getElementById('hasil').value =  radiologi[index].hasil
             indexUpdate = index
         }
-
+        renderTable ();
 
     </script>
 

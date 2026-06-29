@@ -62,7 +62,8 @@
     </div>
 
     <script>
-        let laboratorium = []
+        let laboratorium = localStorage.getItem('laboratorium') ? JSON.parse(localStorage.
+        getItem ('laboratorium')) :[]
         let indexUpdate = -1
         function submitLab() {
             let namaPasien = document.getElementById("namaPasien").value.trim()
@@ -75,6 +76,7 @@
                         pemeriksaan,
                         hasil
                     }
+                    localStorage.setItem('laboratorium',JSON.stringify(laboratorium))
                     document.getElementById('submit').innerText = 'Simpan'
                     indexUpdate = -1
                     alert('Data Berhasil diupdate')  
@@ -84,6 +86,7 @@
                         pemeriksaan,
                         hasil
                     })
+                    localStorage.setItem('laboratorium',JSON.stringify(laboratorium))
                     alert('Data Berhasil disimpan')
                 }
                 renderTable()
@@ -120,6 +123,7 @@
             confirm(`Yakin ingin hapus pasien ${laboratorium[index].namaPasien}?`)
             if (konfirmasi) {
                 laboratorium.splice(index, 1)
+                localStorage.setItem('laboratorium',JSON.stringify(laboratorium))
                 renderTable()
                 alert('Pasien Berhasil dihapus')
             }
@@ -132,7 +136,7 @@
             document.getElementById('hasil').value =  laboratorium[index].hasil
             indexUpdate = index
         }
-
+        renderTable ();
 
     </script>
 

@@ -55,7 +55,8 @@
     </div>
 
     <script>
-        let resep = []
+        let resep = localStorage.getItem('resep') ? JSON.parse(localStorage.
+        getItem ('resep')) :[]
         let indexUpdate = -1
         function tambahObat() {
             let namaPasien = document.getElementById("namaPasien").value.trim()
@@ -68,6 +69,7 @@
                         obat,
                         jumlah
                     }
+                    localStorage.setItem('resep',JSON.stringify(resep))
                     document.getElementById('submit').innerText = 'Simpan'
                     indexUpdate = -1
                     alert('Data Berhasil diupdate')
@@ -111,6 +113,7 @@
             confirm(`Yakin ingin hapus pasien ${resep[index].namaPasien}?`)
             if (konfirmasi) {
                 resep.splice(index, 1)
+                localStorage.setItem('resep',JSON.stringify(resep))
                 renderTable()
                 alert('Pasien Berhasil dihapus')
             }
@@ -122,7 +125,7 @@
             document.getElementById('jumlah').value =  resep[index].jumlah
             indexUpdate = index
         }
-
+        renderTable ();
 
     
     </script>

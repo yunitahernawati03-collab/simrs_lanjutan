@@ -61,7 +61,8 @@
     </div>
 
     <script>
-        let pasien = []
+        let pasien = localStorage.getItem('pasien') ? JSON.parse(localStorage.
+        getItem ('pasien')) : []
         let indexUpdate = -1
         function submitRegister() {
             let namaPasien = document.getElementById('namaPasien').value.trim()
@@ -72,6 +73,7 @@
                         namaPasien,
                         poli
                     }
+                    localStorage.setItem('pasien',JSON.stringify(pasien))
                     document.getElementById('submit').innerText = 'Simpan'
                     indexUpdate = -1
                     alert('Pasien Berhasil diupdate')
@@ -80,6 +82,7 @@
                         namaPasien,
                         poli
                     })
+                    localStorage.setItem('pasien',JSON.stringify(pasien))
                     alert('Pasien Berhasil disimpan')
                 }
                 renderTable()
@@ -115,6 +118,7 @@
             confirm(`Yakin ingin hapus pasien ${pasien[index].namaPasien}?`)
             if (konfirmasi) {
                 pasien.splice(index, 1)
+                localStorage.setItem('pasien',JSON.stringify(pasien))
                 renderTable()
                 alert('Pasien Berhasil dihapus')
             }
@@ -126,6 +130,7 @@
             document.getElementById('poli').value =  pasien[index].poli
             indexUpdate = index
         }
+        renderTable ();
 
     </script>
 
